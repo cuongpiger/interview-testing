@@ -1,13 +1,11 @@
-FROM mysql:8.0
+FROM postgres:11.5-alpine
 
-ENV MYSQL_ROOT_PASSWORD=my-secret
-
-RUN groupadd -r user-group && useradd -r -g user-group new-user
+ENV POSTGRES_PASSWORD=my-secret
+ENV POSTGRES_USER=postgreuser
+ENV POSTGRES_DB=cylo
 
 WORKDIR /app
 
-EXPOSE 3306
+EXPOSE 5432
 
-COPY init.sql /app/
-
-CMD ["mysqld", "--init-file=/app/init.sql"]
+COPY init.sql /docker-entrypoint-initdb.d/
