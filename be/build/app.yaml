@@ -1,1 +1,2 @@
 port: ${PORT}
+postgres_dsn: ${POSTGRES_DSN}
