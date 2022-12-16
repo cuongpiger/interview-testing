@@ -7,8 +7,10 @@ import (
 
 type Product struct {
 	gorm.Model
-	ID     int64          `json:"id" gorm:"column:id;primaryKey;autoIncrement;"`
-	Name   string         `json:"name" gorm:"column:name;not null;type:string;"`
-	Price  float64        `json:"price" gorm:"column:price;not null;type:float;"`
-	Images pq.StringArray `json:"images" gorm:"column:images;type:text[];"`
+	ID          int64          `json:"id" gorm:"column:id;primaryKey;autoIncrement;"`
+	Name        string         `json:"name" gorm:"column:name;not null;type:string;"`
+	Price       float64        `json:"price" gorm:"column:price;not null;type:float;"`
+	Images      pq.StringArray `json:"images" gorm:"column:images;type:text[];"`
+	Description string         `json:"description" gorm:"column:description;type:text;"`
+	Category    Category       `json:"category" gorm:"column:category;type:int;foreignKey:CategoryRefer;"`
 }

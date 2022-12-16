@@ -32,6 +32,7 @@ func (s *Server) Init() {
 	}
 
 	_ = postgresDB.AutoMigrate(&models.Product{})
+	_ = postgresDB.AutoMigrate(&models.Category{})
 
 	var product models.Product
 	postgresDB.First(&product)
