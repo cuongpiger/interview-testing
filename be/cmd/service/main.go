@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/pkg/config"
 	sv "app/pkg/server"
 	"flag"
 	"fmt"
@@ -20,7 +21,7 @@ func main() {
 		}
 	}()
 
-	cfg, err := sv.Load(configFile)
+	cfg, err := config.Load(configFile)
 	if err != nil {
 		zap.S().Errorf("Load config error: %v", err)
 		panic(err)
@@ -36,4 +37,9 @@ func main() {
 	}
 
 	server.Init()
+
+	if err := server.Run(); err != nil {
+		zap.S().Errorf("Run server error: %v", err)
+		panic(err)
+	}
 }

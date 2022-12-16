@@ -1,22 +1,22 @@
 package server
 
 import (
-	"app/service/models"
+	"app/pkg/config"
+	"app/service/repository"
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"net/http"
 )
 
 type Server struct {
+	server *http.Server
 	router *gin.Engine
-	cfg    *AppConfig
+	cfg    *config.AppConfig
 }
 
-
-
-func NewServer(cfg *AppConfig) (*Server, error) {
+func NewServer(cfg *config.AppConfig) (*Server, error) {
 	router := gin.Default()
 	return &Server{
 		router: router,
@@ -25,32 +25,19 @@ func NewServer(cfg *AppConfig) (*Server, error) {
 }
 
 func (s *Server) Init() {
-	//ctx := context.Background()
-
+	ctx := context.Background()
 	postgresDB := s.initDatabase()
-
+	repo := repository.NewRepo(ctx, s.cfg, postgresDB)
+	domains := s.initDomains(repo)
+	s.initRouter(domains)
 }
 
-func (s *Server) initDatabase() *gorm.DB {
-	postgresDB, errDB := gorm.Open(postgres.Open(s.cfg.PostgresDSN), &gorm.Config{})
-	if errDB != nil {
-		zap.S().Errorf("Failed to connect to postgres: %v", errDB)
-		panic(errDB)
+func (s *Server) Run() error {
+	addr := fmt.Sprintf(":%d", s.cfg.Port)
+	s.server = &http.Server{
+		Addr:    addr,
+		Handler: s.router,
 	}
-
-	errDB = postgresDB.AutoMigrate(&models.Category{})
-	errDB = postgresDB.AutoMigrate(&models.Product{})
-
-	if errDB != nil {
-		zap.S().Errorf("Failed to migrate postgres: %v", errDB)
-		panic(errDB)
-	}
-
-	return postgresDB
-}
-
-func (s *Server) initDomain() *Domains {
-	return &Domains{
-		product:
-	}
+	zap.S().Infof("Start server at %s", addr)
+	return s.server.ListenAndServe()
 }

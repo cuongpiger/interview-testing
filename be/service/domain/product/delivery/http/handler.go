@@ -1,7 +1,8 @@
 package http
 
 import (
-	"app/pkg/server"
+	"app/pkg/config"
+	"app/pkg/request"
 	productUC "app/service/domain/product/usecase"
 	"app/service/models/dto"
 	"fmt"
@@ -9,25 +10,25 @@ import (
 	"net/http"
 )
 
-type productHandler struct {
-	cfg       *server.AppConfig
+type ProductHandler struct {
+	cfg       *config.AppConfig
 	productUC productUC.IProductUsecase
 }
 
-func NewProductHandler(cfg *server.AppConfig, productUC productUC.IProductUsecase) *productHandler {
-	return &productHandler{
+func NewProductHandler(cfg *config.AppConfig, productUC productUC.IProductUsecase) *ProductHandler {
+	return &ProductHandler{
 		cfg:       cfg,
 		productUC: productUC,
 	}
 }
 
-func (s *productHandler) listProducts() gin.HandlerFunc {
+func (s *ProductHandler) listProducts() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		form := new(dto.ListProductsForm)
 		err := ctx.BindQuery(form)
 		if err != nil {
 			ctx.PureJSON(http.StatusBadRequest,
-				server.NewResponse().
+				request.NewResponse().
 					SetCode("BAD_REQUEST").
 					SetMessage(fmt.Sprintf("%+v", err)).GetResponse())
 			return
@@ -36,12 +37,12 @@ func (s *productHandler) listProducts() gin.HandlerFunc {
 		products, err := s.productUC.ListProducts(form.Page, form.Limit)
 		if err != nil {
 			ctx.PureJSON(http.StatusBadRequest,
-				server.NewResponse().
+				request.NewResponse().
 					SetCode("BAD_REQUEST").
 					SetMessage(fmt.Sprintf("%+v", err)).GetResponse())
 			return
 		}
 
-		ctx.PureJSON(http.StatusOK, server.NewResponse().SetCode("SUCCESS").SetData(products).GetResponse())
+		ctx.PureJSON(http.StatusOK, request.NewResponse().SetCode("SUCCESS").SetData(products).GetResponse())
 	}
 }

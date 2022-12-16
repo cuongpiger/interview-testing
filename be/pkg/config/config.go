@@ -1,4 +1,4 @@
-package server
+package config
 
 import (
 	"go.uber.org/zap"
@@ -32,5 +32,6 @@ func Load(filePath string) (*AppConfig, error) {
 
 type AppConfig struct {
 	Port        int    `yaml:"port"`
+	Host        string `yaml:"host"`
 	PostgresDSN string `yaml:"postgres_dsn"`
 }

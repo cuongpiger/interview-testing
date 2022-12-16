@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"app/pkg/server"
+	"app/pkg/config"
 	"app/service/repository/postgres"
 	"context"
 	"gorm.io/gorm"
@@ -20,11 +20,11 @@ type IRepo interface {
 
 type repo struct {
 	ctx      context.Context
-	cfg      *server.AppConfig
+	cfg      *config.AppConfig
 	postgres *gorm.DB
 }
 
-func NewRepo(ctx context.Context, cfg *server.AppConfig, postgres *gorm.DB) IRepo {
+func NewRepo(ctx context.Context, cfg *config.AppConfig, postgres *gorm.DB) IRepo {
 	return &repo{
 		ctx:      ctx,
 		cfg:      cfg,

@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"app/pkg/server"
+	"app/pkg/config"
 	"app/service/models"
 	"app/service/repository"
 	"go.uber.org/zap"
@@ -12,12 +12,12 @@ type IProductUsecase interface {
 }
 
 type productUsecase struct {
-	cfg  *server.AppConfig
+	cfg  *config.AppConfig
 	log  *zap.SugaredLogger
 	repo repository.IRepo
 }
 
-func NewProductUsecase(cfg *server.AppConfig, repo repository.IRepo) IProductUsecase {
+func NewProductUsecase(cfg *config.AppConfig, repo repository.IRepo) IProductUsecase {
 	return &productUsecase{
 		cfg:  cfg,
 		log:  zap.S(),
