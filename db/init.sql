@@ -1,11 +1,16 @@
 -- CREATE DATABASE cylo;
 -- USE cylo;
 
+ALTER DATABASE cylo SET timezone TO 'Asia/Ho_Chi_Minh';
+
 CREATE TABLE Products (
     id SERIAL NOT NULL PRIMARY KEY ,
     name VARCHAR(255) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
-    images TEXT []
+    images TEXT [],
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMPTZ NULL
 );
 
 INSERT INTO Products (name, price, images) VALUES
