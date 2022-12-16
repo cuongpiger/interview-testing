@@ -14,6 +14,8 @@ type Server struct {
 	cfg    *AppConfig
 }
 
+
+
 func NewServer(cfg *AppConfig) (*Server, error) {
 	router := gin.Default()
 	return &Server{
@@ -25,17 +27,30 @@ func NewServer(cfg *AppConfig) (*Server, error) {
 func (s *Server) Init() {
 	//ctx := context.Background()
 
+	postgresDB := s.initDatabase()
+
+}
+
+func (s *Server) initDatabase() *gorm.DB {
 	postgresDB, errDB := gorm.Open(postgres.Open(s.cfg.PostgresDSN), &gorm.Config{})
 	if errDB != nil {
 		zap.S().Errorf("Failed to connect to postgres: %v", errDB)
 		panic(errDB)
 	}
 
-	_ = postgresDB.AutoMigrate(&models.Product{})
-	_ = postgresDB.AutoMigrate(&models.Category{})
+	errDB = postgresDB.AutoMigrate(&models.Category{})
+	errDB = postgresDB.AutoMigrate(&models.Product{})
 
-	var product models.Product
-	postgresDB.First(&product)
+	if errDB != nil {
+		zap.S().Errorf("Failed to migrate postgres: %v", errDB)
+		panic(errDB)
+	}
 
-	fmt.Println(product)
+	return postgresDB
+}
+
+func (s *Server) initDomain() *Domains {
+	return &Domains{
+		product:
+	}
 }
