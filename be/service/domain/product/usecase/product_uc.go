@@ -2,13 +2,13 @@ package usecase
 
 import (
 	"app/pkg/config"
-	"app/service/models"
+	"app/service/models/dto"
 	"app/service/repository"
 	"go.uber.org/zap"
 )
 
 type IProductUsecase interface {
-	ListProducts(page, limit int) ([]models.Product, error)
+	ListProducts(page, limit int) ([]*dto.ListProductsResponse, error)
 }
 
 type productUsecase struct {
@@ -25,7 +25,7 @@ func NewProductUsecase(cfg *config.AppConfig, repo repository.IRepo) IProductUse
 	}
 }
 
-func (s *productUsecase) ListProducts(page, limit int) ([]models.Product, error) {
+func (s *productUsecase) ListProducts(page, limit int) ([]*dto.ListProductsResponse, error) {
 	offset := (page - 1) * limit
 	products, err := s.repo.NewPostgresProduct().ListProducts(offset, limit)
 	if err != nil {
@@ -33,5 +33,10 @@ func (s *productUsecase) ListProducts(page, limit int) ([]models.Product, error)
 		return nil, err
 	}
 
-	return products, nil
+	res := make([]*dto.ListProductsResponse, len(products))
+	for i, product := range products {
+		res[i] = new(dto.ListProductsResponse).Merge(&product)
+	}
+
+	return res, nil
 }
