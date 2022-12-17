@@ -1,0 +1,30 @@
+version: '3.6'
+
+services:
+  web:
+    build: .
+    command: python /thuocsi/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/thuocsi
+    ports:
+      - 8000:8000
+    depends_on:
+      - migration
+      - db
+  db:
+    image: postgres:11
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
+      
+  migration:
+    build: .
+    command: python manage.py migrate --noinput
+    volumes:
+      - .:/thuocsi
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
