@@ -34,7 +34,7 @@ func (s *ProductHandler) listProducts() gin.HandlerFunc {
 			return
 		}
 
-		products, err := s.productUC.ListProducts(form.Page, form.Limit)
+		products, err := s.productUC.ListProducts(form.Page, form.Limit, form.GetOrder())
 		if err != nil {
 			ctx.PureJSON(http.StatusBadRequest,
 				request.NewResponse().

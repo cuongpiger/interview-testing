@@ -8,7 +8,7 @@ import (
 )
 
 type IProductUsecase interface {
-	ListProducts(page, limit int) ([]*dto.ListProductsResponse, error)
+	ListProducts(page, limit int, orders [][]string) ([]*dto.ListProductsResponse, error)
 }
 
 type productUsecase struct {
@@ -25,9 +25,9 @@ func NewProductUsecase(cfg *config.AppConfig, repo repository.IRepo) IProductUse
 	}
 }
 
-func (s *productUsecase) ListProducts(page, limit int) ([]*dto.ListProductsResponse, error) {
+func (s *productUsecase) ListProducts(page, limit int, orders [][]string) ([]*dto.ListProductsResponse, error) {
 	offset := (page - 1) * limit
-	products, err := s.repo.NewPostgresProduct().ListProducts(offset, limit)
+	products, err := s.repo.NewPostgresProduct().ListProducts(offset, limit, orders)
 	if err != nil {
 		s.log.Errorf("[usecase][product] ListProducts: failed to get data from Postgres: %#v", err)
 		return nil, err
