@@ -14,12 +14,13 @@ type (
 	}
 
 	ListProductsResponse struct {
-		ID          int64          `json:"id"`
-		Name        string         `json:"name"`
-		Price       float64        `json:"price"`
-		Images      pq.StringArray `json:"images"`
-		Description string         `json:"description"`
-		Category    int64          `json:"category"`
+		ID           int64          `json:"id"`
+		Name         string         `json:"name"`
+		Price        float64        `json:"price"`
+		Images       pq.StringArray `json:"images"`
+		Description  string         `json:"description"`
+		CategoryID   int64          `json:"category_id"`
+		CategoryName string         `json:"category_name"`
 	}
 )
 
@@ -45,19 +46,20 @@ func (s *ListProductsForm) GetOrder() [][]string {
 // ListProductsResponse's collection of methods
 func (s *ListProductsResponse) Merge(data interface{}) *ListProductsResponse {
 	switch d := data.(type) {
-	case *models.Product:
-		return s.mergeProduct(d)
+	case *models.ProductCategory:
+		return s.mergeProductCategory(d)
 	}
 
 	return s
 }
 
-func (s *ListProductsResponse) mergeProduct(product *models.Product) *ListProductsResponse {
+func (s *ListProductsResponse) mergeProductCategory(product *models.ProductCategory) *ListProductsResponse {
 	s.ID = product.ID
 	s.Name = product.Name
 	s.Price = product.Price
 	s.Images = product.Images
 	s.Description = product.Description
-	s.Category = product.Category
+	s.CategoryID = product.Category.ID
+	s.CategoryName = product.Category.Name
 	return s
 }

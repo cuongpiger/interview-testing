@@ -7,7 +7,7 @@ import (
 )
 
 type IProductRepo interface {
-	ListProducts(offset, limit int, orders [][]string) ([]models.Product, error)
+	ListProducts(offset, limit int, orders [][]string) ([]models.ProductCategory, error)
 }
 
 type productRepo struct {
@@ -26,10 +26,10 @@ func (s *productRepo) getTable() *gorm.DB {
 	return s.client.Model(&models.Product{})
 }
 
-func (s *productRepo) ListProducts(offset, limit int, orders [][]string) ([]models.Product, error) {
+func (s *productRepo) ListProducts(offset, limit int, orders [][]string) ([]models.ProductCategory, error) {
 	var (
-		products []models.Product
-		query    = s.getTable().Offset(offset).Limit(limit)
+		products []models.ProductCategory
+		query    = s.getTable().Preload("Category").Offset(offset).Limit(limit)
 	)
 
 	// sort phase
