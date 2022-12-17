@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"app/pkg/config"
 	"app/service/models"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -29,7 +30,7 @@ func (s *productRepo) getTable() *gorm.DB {
 func (s *productRepo) ListProducts(offset, limit int, orders [][]string) ([]models.ProductCategory, error) {
 	var (
 		products []models.ProductCategory
-		query    = s.getTable().Preload("Category").Offset(offset).Limit(limit)
+		query    = s.getTable().Preload(config.TablePgrCategory).Offset(offset).Limit(limit)
 	)
 
 	// sort phase
