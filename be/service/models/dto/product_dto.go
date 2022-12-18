@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"app/pkg/request"
 	"app/service/models"
 	"github.com/lib/pq"
 	"strings"
@@ -8,18 +9,19 @@ import (
 
 type (
 	ListProductsForm struct {
-		Page  int    `form:"page"`
-		Limit int    `form:"limit"`
-		Order string `form:"order"`
+		Page   int    `form:"page"`
+		Limit  int    `form:"limit"`
+		Order  string `form:"order"`
+		Filter string `form:"filter"`
 	}
 
 	ListProductsResponse struct {
-		ID           int64          `json:"id"`
+		ID           uint           `json:"id"`
 		Name         string         `json:"name"`
 		Price        float64        `json:"price"`
 		Images       pq.StringArray `json:"images"`
 		Description  string         `json:"description"`
-		CategoryID   int64          `json:"category_id"`
+		CategoryID   uint           `json:"category_id"`
 		CategoryName string         `json:"category_name"`
 	}
 )
@@ -43,17 +45,32 @@ func (s *ListProductsForm) GetOrder() [][]string {
 	return orders
 }
 
+func (s *ListProductsForm) GetFilter() []*request.Filter {
+	filters := make([]*request.Filter, 0)
+	if s.Filter == "" {
+		return filters
+	}
+
+	for _, cmd := range strings.Split(strings.ToLower(s.Filter), "|") {
+		if filter, err := request.ToFilter(cmd); err == nil {
+			filters = append(filters, filter)
+		}
+	}
+
+	return filters
+}
+
 // ListProductsResponse's collection of methods
 func (s *ListProductsResponse) Merge(data interface{}) *ListProductsResponse {
 	switch d := data.(type) {
-	case *models.ProductCategory:
+	case *models.Product:
 		return s.mergeProductCategory(d)
 	}
 
 	return s
 }
 
-func (s *ListProductsResponse) mergeProductCategory(product *models.ProductCategory) *ListProductsResponse {
+func (s *ListProductsResponse) mergeProductCategory(product *models.Product) *ListProductsResponse {
 	s.ID = product.ID
 	s.Name = product.Name
 	s.Price = product.Price

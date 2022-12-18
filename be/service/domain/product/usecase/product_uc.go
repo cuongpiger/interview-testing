@@ -2,13 +2,14 @@ package usecase
 
 import (
 	"app/pkg/config"
+	"app/pkg/request"
 	"app/service/models/dto"
 	"app/service/repository"
 	"go.uber.org/zap"
 )
 
 type IProductUsecase interface {
-	ListProducts(page, limit int, orders [][]string) ([]*dto.ListProductsResponse, error)
+	ListProducts(page, limit int, filter []*request.Filter, orders [][]string) ([]*dto.ListProductsResponse, error)
 }
 
 type productUsecase struct {
@@ -25,9 +26,9 @@ func NewProductUsecase(cfg *config.AppConfig, repo repository.IRepo) IProductUse
 	}
 }
 
-func (s *productUsecase) ListProducts(page, limit int, orders [][]string) ([]*dto.ListProductsResponse, error) {
+func (s *productUsecase) ListProducts(page, limit int, filter []*request.Filter, orders [][]string) ([]*dto.ListProductsResponse, error) {
 	offset := (page - 1) * limit
-	products, err := s.repo.NewPostgresProduct().ListProducts(offset, limit, orders)
+	products, err := s.repo.NewPostgresProduct().ListProducts(offset, limit, filter, orders)
 	if err != nil {
 		s.log.Errorf("[usecase][product] ListProducts: failed to get data from Postgres: %#v", err)
 		return nil, err
