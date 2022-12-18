@@ -8,4 +8,4 @@ WORKDIR /app
 
 EXPOSE 5432
 
-COPY init.sql /docker-entrypoint-initdb.d/
+COPY init_cylo.sql /docker-entrypoint-initdb.d/
