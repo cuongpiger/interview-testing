@@ -6,7 +6,7 @@ import ScrollToTopOnMount from "../template/ScrollToTopOnMount";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
-const HOST = process.env.REACT_APP_BE_HOST;
+const HOST = "http://0.0.0.0:3070";
 
 function Landing() {
   const [products, setProducts] = useState([]);

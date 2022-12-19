@@ -18,3 +18,15 @@ services:
       - cylo_db
     depends_on:
       - cylo_db
+
+  cylo_fe:
+    container_name: cylo_fe
+    image: cylo-fe
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    build: fe/
+    links:
+      - cylo_service
+    depends_on:
+      - cylo_service

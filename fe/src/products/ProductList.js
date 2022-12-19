@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ScrollToTopOnMount from "../template/ScrollToTopOnMount";
 
-const HOST = process.env.REACT_APP_BE_HOST;
+const HOST = "http://0.0.0.0:3070";
 
 function FilterMenuLeft(props) {
   const [cates, setCates] = useState([]);
