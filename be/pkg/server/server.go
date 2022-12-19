@@ -26,6 +26,7 @@ func NewServer(cfg *config.AppConfig) (*Server, error) {
 
 func (s *Server) Init() {
 	ctx := context.Background()
+	s.initCORS()
 	postgresDB := s.initDatabase()
 	//s.initSampleData(postgresDB)
 	repo := repository.NewRepo(ctx, s.cfg, postgresDB)

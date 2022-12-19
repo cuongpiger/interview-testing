@@ -1,4 +1,3 @@
-import Image from "../nillkin-case-1.jpg";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -19,7 +18,7 @@ function ProductH(props) {
 
     offPrice = (
       <>
-        <del>{price}Ks</del> {price - (props.percentOff * price) / 100}Ks
+        {props.product.price} <b>₫</b>
       </>
     );
   }
@@ -29,11 +28,10 @@ function ProductH(props) {
         <div className="row g-0">
           <div className="col-4">
             <Link to="/products/1" href="!#" replace>
-              {percentOff}
               <img
                 className="rounded-start bg-dark cover w-100 h-100"
                 alt=""
-                src={Image}
+                src={props.product.images[0]}
               />
             </Link>
           </div>
@@ -41,7 +39,7 @@ function ProductH(props) {
             <div className="card-body h-100">
               <div className="d-flex flex-column h-100">
                 <h5 className="card-title text-dark text-truncate mb-1">
-                  Nillkin iPhone X cover
+                  {props.product.name}
                 </h5>
                 <span className="card-text text-muted mb-2 flex-shrink-0">
                   {offPrice}

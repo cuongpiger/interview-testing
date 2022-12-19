@@ -1,10 +1,26 @@
 import Banner from "./Banner";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import FeatureProduct from "./FeatureProduct";
 import ScrollToTopOnMount from "../template/ScrollToTopOnMount";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
 function Landing() {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    axios.get("http://localhost:3070/api/v1/products?page=1&limit=5")
+    .then((res) => {
+      const resp = res.data;
+      if (resp.code === "SUCCESS") {
+        setProducts(resp.data);
+        console.log(resp.data);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  })
   return (
     <>
       <ScrollToTopOnMount />
@@ -23,8 +39,8 @@ function Landing() {
       <h2 className="text-muted text-center mt-4 mb-3">New Arrival</h2>
       <div className="container pb-5 px-lg-5">
         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 px-md-5">
-          {Array.from({ length: 6 }, (_, i) => {
-            return <FeatureProduct key={i} />;
+          {products.map(product => {
+            return <FeatureProduct key={product.id} product={product}/>;
           })}
         </div>
       </div>

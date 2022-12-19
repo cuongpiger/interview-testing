@@ -37,7 +37,7 @@ func (s *Server) initDomains(repo repository.IRepo) *Domains {
 
 func (s *Server) initRouter(domains *Domains) {
 	productHdl := http.NewProductHandler(s.cfg, domains.product)
-	productHdl.ProductAPIRoute(s.router.Group("/api/v1/products"))
+	productHdl.ProductAPIRoute(s.router.Group("/api/v1"))
 }
 
 func (s *Server) initDatabase() *gorm.DB {

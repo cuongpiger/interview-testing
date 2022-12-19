@@ -24,6 +24,11 @@ type (
 		CategoryID   uint           `json:"category_id"`
 		CategoryName string         `json:"category_name"`
 	}
+
+	GetAllCategoriesResponse struct {
+		ID   uint   `json:"id"`
+		Name string `json:"name"`
+	}
 )
 
 // ListProductsForm's collection of methods
@@ -78,5 +83,21 @@ func (s *ListProductsResponse) mergeProductCategory(product *models.Product) *Li
 	s.Description = product.Description
 	s.CategoryID = product.Category.ID
 	s.CategoryName = product.Category.Name
+	return s
+}
+
+// GetAllCategoriesResponse's collection of methods
+func (s *GetAllCategoriesResponse) Merge(data interface{}) *GetAllCategoriesResponse {
+	switch d := data.(type) {
+	case *models.Category:
+		return s.mergeCategoryCategory(d)
+	}
+
+	return s
+}
+
+func (s *GetAllCategoriesResponse) mergeCategoryCategory(product *models.Category) *GetAllCategoriesResponse {
+	s.ID = product.ID
+	s.Name = product.Name
 	return s
 }

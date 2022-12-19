@@ -12,10 +12,15 @@ var (
 	// product
 	productOnce sync.Once
 	productRepo postgres.IProductRepo
+
+	// category
+	categoryOnce sync.Once
+	categoryRepo postgres.ICategoryRepo
 )
 
 type IRepo interface {
 	NewPostgresProduct() postgres.IProductRepo
+	NewPostgresCategory() postgres.ICategoryRepo
 }
 
 type repo struct {
@@ -38,4 +43,12 @@ func (s *repo) NewPostgresProduct() postgres.IProductRepo {
 	})
 
 	return productRepo
+}
+
+func (s *repo) NewPostgresCategory() postgres.ICategoryRepo {
+	categoryOnce.Do(func() {
+		categoryRepo = postgres.NewCategoryRepo(s.postgres)
+	})
+
+	return categoryRepo
 }

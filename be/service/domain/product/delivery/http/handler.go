@@ -46,3 +46,18 @@ func (s *ProductHandler) listProducts() gin.HandlerFunc {
 		ctx.PureJSON(http.StatusOK, request.NewResponse().SetCode("SUCCESS").SetData(products).GetResponse())
 	}
 }
+
+func (s *ProductHandler) getAllCategories() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		categories, err := s.productUC.GetAllCategories()
+		if err != nil {
+			ctx.PureJSON(http.StatusBadRequest,
+				request.NewResponse().
+					SetCode("BAD_REQUEST").
+					SetMessage(fmt.Sprintf("%+v", err)).GetResponse())
+			return
+		}
+
+		ctx.PureJSON(http.StatusOK, request.NewResponse().SetCode("SUCCESS").SetData(categories).GetResponse())
+	}
+}
