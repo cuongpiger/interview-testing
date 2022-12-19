@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ScrollToTopOnMount from "../template/ScrollToTopOnMount";
 
+const HOST = process.env.REACT_APP_BE_HOST;
 
 function FilterMenuLeft(props) {
   const [cates, setCates] = useState([]);
@@ -17,7 +18,7 @@ function FilterMenuLeft(props) {
   }, [])
 
   function callAPICategories() {
-    axios.get("http://localhost:3070/api/v1/categories")
+    axios.get(HOST+"/api/v1/categories")
     .then((res) => {
       const resp = res.data;
       if (resp.code === "SUCCESS") {
@@ -92,9 +93,10 @@ function ProductList() {
   const limit = 6;
   const [viewType, setViewType] = useState({ grid: true });
   const [products, setProducts] = useState([]);
-  const [mURL, setURL] = useState("http://localhost:3070/api/v1/products?page=1&limit="+limit+"&order=name:asc");
+  const [mURL, setURL] = useState(HOST + "/api/v1/products?page=1&limit="+limit+"&order=name:asc");
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState("name:asc");
+  const searchRef = useRef();
   const memoProducts = useMemo(() => products, [products]);
 
   function callAPI(url) {
@@ -119,7 +121,7 @@ function ProductList() {
 
   function handleChange(event) {
     const order = event.target.value;
-    const url = "http://localhost:3070/api/v1/products?page=" + page +"&limit=" +limit+"&order=" + order;
+    const url = HOST+"/api/v1/products?page=" + page +"&limit=" +limit+"&order=" + order;
     setOrder(order);
     callAPI(url);
   }
@@ -127,17 +129,22 @@ function ProductList() {
   function handlePageChange(act) {
     let tmpPage = page + act;
     if (tmpPage < 1) tmpPage = 1;
-    const url = "http://localhost:3070/api/v1/products?page=" + tmpPage + "&limit="+limit+"&order=" + order;
+    const url = HOST+"/api/v1/products?page=" + tmpPage + "&limit="+limit+"&order=" + order;
     callAPI(url);
     setPage(tmpPage);
   }
 
   function handleSetCategory(category_id) {
-    setURL("http://localhost:3070/api/v1/products?page=1&limit="+limit+"&order="+order+"&filter=category_id:eq:" + category_id);
+    setURL(HOST+"/api/v1/products?page=1&limit="+limit+"&order="+order+"&filter=category_id:eq:" + category_id);
   }
 
   function handlePriceRange(min, max) {
-    setURL("http://localhost:3070/api/v1/products?page=1&limit="+limit+"&order="+order+"&filter=price:gte:" + min + "|price:lte:" + max);
+    setURL(HOST+"/api/v1/products?page=1&limit="+limit+"&order="+order+"&filter=price:gte:" + min + "|price:lte:" + max);
+  }
+
+  function searchHandler() {
+    const keyword = searchRef.current.value;
+    setURL(HOST+"/api/v1/products?page=1&limit="+limit+"&order="+order+"&filter=name:like:" + keyword);
   }
 
   useEffect(() => {
@@ -195,8 +202,9 @@ function ProductList() {
                     type="text"
                     placeholder="Search products..."
                     aria-label="search input"
+                    ref={searchRef}
                   />
-                  <button className="btn btn-outline-dark">
+                  <button className="btn btn-outline-dark" onClick={searchHandler}>
                     <FontAwesomeIcon icon={["fas", "search"]} />
                   </button>
                 </div>

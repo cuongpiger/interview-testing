@@ -6,10 +6,12 @@ import ScrollToTopOnMount from "../template/ScrollToTopOnMount";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 
+const HOST = process.env.REACT_APP_BE_HOST;
+
 function Landing() {
   const [products, setProducts] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:3070/api/v1/products?page=1&limit=5")
+    axios.get(HOST+"/api/v1/products?page=1&limit=5")
     .then((res) => {
       const resp = res.data;
       if (resp.code === "SUCCESS") {
