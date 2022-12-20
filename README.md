@@ -7,7 +7,7 @@
   ![](./img/01.png)
 * The source code of BE site was implemented in the **be** directory.<br>
   ![](./img/02.png)
-* I use Clean Architecture to implement the project.<br>
+* I use Clean Architecture to implement the project. Personally, Clean Architecture divides clearly the business problem and code techniques, supposed that one day you do not want to use PostgreSQL anymore, or implement gRPC to your service, your main job is easy to remove or add these features, and the remaining features will be not affected..<br>
   ![](./img/03.png)
 
 # c. Frameworks, and Tools
