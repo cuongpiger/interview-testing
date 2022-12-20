@@ -16,5 +16,6 @@
   * Gin is a web framework written in Go (Golang). It features a martini-like API with much better performance -- up to 40 times faster.
 * GORM: [https://gorm.io](https://gorm.io/)
   * The fantastic ORM library for Golang, aims to be developer friendly. You can easly build your structure of database without direactly interacting with SQL.
-
+* PostgreSQL: [https://www.postgresql.org](https://www.postgresql.org/)
+  * I use PostgreSQL because it is a powerful, open source object-relational database system. It also have advanced data types to store complex data, and it is easy to use.
 * Docker, and docker-compose: I use it in my project because I want you to run the project easily without installing any dependencies.
